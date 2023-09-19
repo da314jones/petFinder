@@ -7,6 +7,7 @@ import LocationServices from './components/LocationServices';
 import ConfirmationModal from './components/ConfirmationModal';
 import PetProfile from './components/PetProfile';
 import PetProfilePage from './components/PetProfilePage';
+import './app.css'
 
 export default function App() {
     const [selectedPets, setSelectedPets] = useState([]);

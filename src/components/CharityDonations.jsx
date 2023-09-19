@@ -1,7 +1,7 @@
 import React from "react";
 import "./charity.css"
 
-export default functions CharityDonations() {
+export default function CharityDonations() {
 
   return (
     <div className="charity-donations">

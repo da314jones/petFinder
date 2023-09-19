@@ -6,8 +6,6 @@ const DogSearch = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
- const apiKey = import.meta.env.VITE_API_KEY
- const apiSecret = import.meta.env.VITE_API_SECRET; 
 
   const handleSearch = () => {
     setLoading(true);

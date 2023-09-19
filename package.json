@@ -8,9 +8,10 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-      "start": "node src/main.jsx"
+    "start": "node src/main.jsx"
   },
   "dependencies": {
+    "axios": "^1.5.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "isomorphic-fetch": "^3.0.0",

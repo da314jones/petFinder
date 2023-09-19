@@ -7,7 +7,29 @@ import SupportSection from './components/SupportSection'
 import DogSearch from './components/DogSearch'
 import SocialMedia from './components/SocialMedia'
 // import DogDetails from './components/dogDetails'
+import { getAnimals } from '../api /petfinder_api'
+
 function App() {
+    const [animals, setAnimals] = useState([]);
+
+    useEffect(() => {
+      async function fetchAnimalsWithToken() {
+        try {
+          const data = await getAnimals();
+          setAnimals(data.animals);
+          setSelectedPets(pets)
+        } catch (error) {
+          console.error('Error:', error);
+  
+          if (error.response && error.response.status === 401) {
+            await getAnimals(); 
+            fetchAnimalsWithToken();
+          }
+        }
+      }
+  
+      fetchAnimalsWithToken();
+    }, []);
 
   return (
     <>

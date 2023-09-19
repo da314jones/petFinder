@@ -5,7 +5,8 @@ const DogSearch = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
- const apiKey = process.env.REACT_APP_PET_FINDER_API_KEY
+ const apiKey = import.meta.env.VITE_API_KEY
+ const apiSecret = import.meta.env.VITE_API_SECRET; 
 
   const handleSearch = () => {
     setLoading(true);
@@ -49,7 +50,7 @@ const DogSearch = () => {
               <li key={dog.id}>
                 <h3>{dog.name}</h3>
                 <p>Breed: {dog.breeds.primary}</p>
-                <img>src= </img>
+                {/* <img>src= </img> */}
                 <p>Location: {dog.contact.address.city}, {dog.contact.address.state}</p>
                 {/* Add more dog details here */}
               </li>

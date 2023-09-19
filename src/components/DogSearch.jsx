@@ -5,7 +5,7 @@ const DogSearch = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
-// const apiKey = ""
+ const apiKey = process.env.REACT_APP_PET_FINDER_API_KEY
 
   const handleSearch = () => {
     setLoading(true);

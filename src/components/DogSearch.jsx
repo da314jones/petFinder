@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './DogSearch.css';
 
 const DogSearch = () => {
   const [searchCriteria, setSearchCriteria] = useState('');
@@ -12,7 +13,7 @@ const DogSearch = () => {
     setLoading(true);
 
 
-    fetch(`https://api.petfinder.com/v2/animals?type=dog&q=${searchCriteria}`, {
+    fetch(`https://api.petfinder.com/v2/animals?type=dog&page=4`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${apiKey}`,

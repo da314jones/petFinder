@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import DogProfile from './DogProfile';
-import { getAnimals } from '../../api/petfinder_api';
+import { getAnimals, fetchAccessToken } from '../../api/petfinder_api';
 
-export default function DogList({ userLocation }) {
+export default function DogList({ user, userLocation, setUser }) {
   const [dogs, setDogs] = useState([]);
-  const [selectedDogIds, setSelectedDogIds] = useState([]);
+  const [selectedPets, setSelectedPets] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -21,13 +21,15 @@ export default function DogList({ userLocation }) {
 
         const data = await getAnimals(params);
         setDogs(data.animals);
-        setSelectedDogIds([]);
+        setSelectedPets([]);
       } catch (error) {
         console.error('Error:', error);
 
         if (error.response && error.response.status === 401) {
-          await getAnimals();
+          
+          await fetchAccessToken();
           fetchAnimalsWithToken();
+          setError('Error fetching animals. Please try again.');
         }
       }
     }
@@ -35,50 +37,17 @@ export default function DogList({ userLocation }) {
     fetchAnimalsWithToken();
   }, [userLocation]);
 
-  const handleDogSelect = (dogId) => {
-    if (selectedDogIds.includes(dogId)) {
-      setSelectedDogIds((prevSelectedDogIds) =>
-        prevSelectedDogIds.filter((id) => id !== dogId)
-      );
-    } else {
-      setSelectedDogIds((prevSelectedDogIds) => [...prevSelectedDogIds, dogId]);
-    }
-  };
-
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
-
-  const selectedDogs = dogs.filter((dog) => selectedDogIds.includes(dog.id));
 
   return (
     <div className="dog-list">
-      {selectedDogs.length > 0 && (
-        <div>
-          <h2>Selected Pets</h2>
-          <ul>
-            {selectedDogs.map((selectedDog) => (
-              <li key={selectedDog.id}>
-                <img src={selectedDog.photos[0]?.small} alt={selectedDog.name} />
-                {selectedDog.species}: {selectedDog.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <h2>Pet List</h2>
-      <ul>
-        {dogs.map((dog) => (
-          <li key={dog.id}>
-            <DogProfile
-              dog={dog}
-              isSelected={selectedDogIds.includes(dog.id)}
-              onDogSelect={handleDogSelect}
-            />
-          </li>
-        ))}
-      </ul>
+      {dogs.map((animal) => (
+        <DogProfile
+          key={animal.id}
+          dog={animal}
+          isSelected={selectedPets.some((selectedPet) => selectedPet.id === animal.id)}
+          onDogSelect={() => handlePetSelect(animal)}
+        />
+      ))}
     </div>
   );
 }

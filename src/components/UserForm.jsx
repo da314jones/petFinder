@@ -1,28 +1,30 @@
-export default function UserForm({
-  userData,
-  handleUserInputChange,
-  handleSubmit,
-  isEmailValid,
-}) {
+import React from 'react';
+import { useState } from 'react';
+
+function UserForm({ isEmailValid, handleEmailValidation }) {
+  const [user, setUser] = useState({
+    name: '',
+    email: '',})
+
   return (
     <div>
       <input
         type="text"
         name="name"
         placeholder="Name"
-        value={userData.name}
-        onChange={handleUserInputChange}
+        value={user.name}
+        onChange={(e) => setUser({ ...user, name: e.target.value })}
       />
       <input
         type="email"
         name="email"
         placeholder="Email"
-        value={userData.email}
-        onChange={handleUserInputChange}
+        value={user.email}
+        onChange={(e) => setUser({ ...user, email: e.target.value })}
       />
-      {!isEmailValid(userData.email) && userData.email.trim() !== '' && (
-        <p>Email is not valid</p>
-      )}
+      {!isEmailValid && <p>Email is not valid</p>}
     </div>
   );
 }
+
+export default UserForm;

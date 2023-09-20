@@ -3,31 +3,13 @@ import React, { useState, useEffect } from 'react';
 export default function LocationServices() {
   const [isLocationEnabled, setLocationEnabled] = useState(false);
   const [locationOptions, setLocationOptions] = useState({
-    enableHighAccuracy: false,
+    enableHighAccuracy: false, // Whether to use high-accuracy location (GPS)
+    maximumAge: 0, // Maximum age of a cached location in milliseconds
+    timeout: Infinity, // Maximum time (in milliseconds) to wait for location data
   });
 
-  const [userLocation, setUserLocation] = useState(null);
-
-  const toggleLocation = () => {
-    if (!isLocationEnabled) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.error('Error getting geolocation:', error);
-        }
-      );
-    } else {
-      setUserLocation(null);
-    }
-    setLocationEnabled(!isLocationEnabled);
-  };
-
   useEffect(() => {
+    // Check if Geolocation API is available in the browser
     if ('geolocation' in navigator) {
       setLocationEnabled(true);
     } else {
@@ -35,9 +17,13 @@ export default function LocationServices() {
     }
   }, []);
 
+  const toggleLocation = () => {
+    setLocationEnabled(!isLocationEnabled);
+  };
+
   const handleOptionsChange = (event) => {
-    const { name, type, checked } = event.target;
-    const newValue = type === 'checkbox' ? checked : event.target.value;
+    const { name, value, type, checked } = event.target;
+    const newValue = type === 'checkbox' ? checked : value;
 
     setLocationOptions({
       ...locationOptions,
@@ -71,14 +57,30 @@ export default function LocationServices() {
             />{' '}
             Enable High Accuracy (GPS)
           </label>
-        </div>
-      )}
 
-      {userLocation && (
-        <div>
-          <h3>User Location</h3>
-          <p>Latitude: {userLocation.latitude}</p>
-          <p>Longitude: {userLocation.longitude}</p>
+          <div>
+            <label>
+              Maximum Age (milliseconds):{' '}
+              <input
+                type="number"
+                name="maximumAge"
+                value={locationOptions.maximumAge}
+                onChange={handleOptionsChange}
+              />
+            </label>
+          </div>
+
+          <div>
+            <label>
+              Timeout (milliseconds):{' '}
+              <input
+                type="number"
+                name="timeout"
+                value={locationOptions.timeout}
+                onChange={handleOptionsChange}
+              />
+            </label>
+          </div>
         </div>
       )}
     </div>

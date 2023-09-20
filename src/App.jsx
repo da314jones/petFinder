@@ -1,4 +1,5 @@
 import React from 'react'
+import { useState, useEffect} from 'react'
 import './App.css'
 import DogList from './components/DogList'
 import AdoptionProcess from './components/AdoptionProcess'
@@ -9,15 +10,17 @@ import SocialMedia from './components/SocialMedia'
 // import DogDetails from './components/dogDetails'
 import { getAnimals } from '../api /petfinder_api'
 
+
 function App() {
     const [animals, setAnimals] = useState([]);
+    const [selectedPets, setSelectedPets] = useState([]);
 
     useEffect(() => {
       async function fetchAnimalsWithToken() {
         try {
           const data = await getAnimals();
           setAnimals(data.animals);
-          setSelectedPets(pets)
+          setSelectedPets(animals)
         } catch (error) {
           console.error('Error:', error);
   

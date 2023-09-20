@@ -44,3 +44,13 @@ async function getAnimals() {
 }
 
 export { getAnimals };
+
+
+
+
+
+
+
+
+
+

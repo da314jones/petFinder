@@ -12,36 +12,30 @@ async function fetchAccessToken(apiKey, apiSecret) {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       }
-      );
-      
-      if (response.status === 200) {
-        const accessToken = response.data.access_token;
-        return accessToken;
-      } else {
-        console.error('Error fetching access token:', response.status, response.statusText);
-        throw new Error('Failed to obtain access token');
-      }
-    } catch (error) {
-      console.error('Error fetching access token:', error);
-      throw error;
+    );
+
+    if (response.status === 200) {
+      const accessToken = response.data.access_token;
+      return accessToken;
+    } else {
+      console.error('Error fetching access token:', response.status, response.statusText);
+      throw new Error('Failed to obtain access token');
     }
+  } catch (error) {
+    console.error('Error fetching access token:', error);
+    throw error;
   }
-  const handleSearch = () => {
-    setLoading(true);
+}
 
 const DogSearch = () => {
   const [searchCriteria, setSearchCriteria] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  
-  
-
 
   useEffect(() => {
     async function fetchDogs() {
       setLoading(true);
 
-      
       const apiKey = process.env.VITE_API_KEY;
       const apiSecret = process.env.VITE_API_SECRET;
 
@@ -70,16 +64,22 @@ const DogSearch = () => {
     fetchDogs();
   }, []);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <div>
       <h1>Dog Search</h1>
-      <input
-        type="text"
-        placeholder="Enter search criteria (e.g., breed, location)"
-        value={searchCriteria}
-        onChange={e => setSearchCriteria(e.target.value)}
-      />
-      <button onClick={handleSearch}>Search</button>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Enter search criteria (e.g., breed, location)"
+          value={searchCriteria}
+          onChange={e => setSearchCriteria(e.target.value)}
+        />
+        <button type="submit">Search</button>
+      </form>
 
       {loading && <p>Loading...</p>}
 

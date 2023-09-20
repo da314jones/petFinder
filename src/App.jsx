@@ -8,7 +8,7 @@ import SupportSection from './components/SupportSection'
 import DogSearch from './components/DogSearch'
 import SocialMedia from './components/SocialMedia'
 // import DogDetails from './components/dogDetails'
-import { getAnimals } from '../api /petfinder_api'
+// import { getAnimals } from '../api /petfinder_api'
 
 
 function App() {

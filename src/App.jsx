@@ -35,19 +35,47 @@ function App() {
     }, []);
 
   return (
-    <>
-    <h1>Dog List</h1>
-      <DogList />
-      <AdoptionProcess/>
-      <CharityDonations/>
-      <SupportSection/>
-      <DogSearch/>
-      <SocialMedia/>
-      {/* <DogDetails/> */}
+    <div>
+      <h1> User Input Form </h1>
+      <form>
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={user.name}
+          onChange={handleUserInputChange}
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={user.email}
+          onChange={handleUserInputChange}
+        />
+        {/* Add more input fields for user information */}
+      </form>
 
+      {/* Pet List */}
+      <ul>
+        {/* Map through the list of pets and display them */}
+        {animals.map((animal) => (
+          <li key={animal.id}>
+            {animal.name}
+            <button onClick={() => handlePetSelect(animal)}>Select</button>
+          </li>
+        ))}
+      </ul>
 
-    </>
-  )
+      {/* Selected Pets */}
+      <div>
+        <h2>Selected Pets:</h2>
+        <ul>
+          {selectedPets.map((pet) => (
+            <li key={pet.id}>{pet.name}</li>
+          ))}
+        </ul>
+        <button onClick={handleEmailSubmit}>Email Selected Pets</button>
+      </div>
+    </div>
+  );
 }
-
-export default App

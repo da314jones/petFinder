@@ -1,4 +1,4 @@
-.adoption-process {
+.adoption-form {
     font-family: Arial, sans-serif;
     padding: 20px;
     border: 1px solid #ccc;
@@ -6,23 +6,23 @@
     background-color: #f9f9f9;
   }
   
-  .adoption-process h2 {
+  .adoption-form h2 {
     color: #333;
   }
   
-  .adoption-process p {
+  .adoption-form p {
     margin-bottom: 10px;
   }
   
-  .adoption-process ol {
+  .adoption-form ol {
     margin-bottom: 10px;
   }
   
-  .adoption-process li {
+  .adoption-form li {
     margin-bottom: 5px;
   }
   
-  .adoption-process li::before {
+  .adoption-form li::before {
     content: "• ";
     color: #333;
   }

@@ -1,9 +1,9 @@
 import React from 'react';
 import './adoption.css'
 
-export default function AdoptionProcess() {
+export default function Adoption() {
   return (
-    <div className="adoption-process">
+    <div className="adoption-form">
       <h2>Adoption Process</h2>
       <p>Follow these steps to adopt a dog:</p>
       <ol>

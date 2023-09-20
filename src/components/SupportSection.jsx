@@ -8,7 +8,7 @@ export default function SupportSection() {
       <h3>Frequently Asked Questions</h3>
       <ul>
         <li>How can I adopt a dog?</li>
-        <li>What is the adoption process?</li>
+        <li>What is the adoption procedure?</li>
         <li>How do I contact the shelter?</li>
         
       </ul>

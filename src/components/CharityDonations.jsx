@@ -1,10 +1,7 @@
 import React from "react";
 import "./charity.css"
 
-const CharityDonations = () => {
-  const shelters = [
-    /*fill with shelter list*/
-  ];
+export default function CharityDonations() {
 
   return (
     <div className="charity-donations">
@@ -28,4 +25,3 @@ const CharityDonations = () => {
   );
 };
 
-export default CharityDonations;

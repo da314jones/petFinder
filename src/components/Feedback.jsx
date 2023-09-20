@@ -4,7 +4,6 @@ export default function Feedback() {
   const [feedback, setFeedback] = useState(null);
 
   const handleFeedback = (isPositive) => {
-    // Send the feedback to your analytics or backend for tracking
     setFeedback(isPositive ? 'Like' : 'Dislike');
   };
 

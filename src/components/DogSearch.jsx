@@ -84,6 +84,7 @@ const DogSearch = () => {
       {loading && <p>Loading...</p>}
 
       {searchResults.length > 0 && (
+   
         <div>
           <h2>Search Results</h2>
           <ul>
@@ -92,6 +93,7 @@ const DogSearch = () => {
                 <h3>{dog.name}</h3>
                 <p>Breed: {dog.breeds.primary}</p>
                 {/* Display images and other dog details here */}
+
               </li>
             ))}
           </ul>

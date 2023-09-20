@@ -12,29 +12,29 @@ async function fetchAccessToken(apiKey, apiSecret) {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       }
-    );
-
-    if (response.status === 200) {
-      const accessToken = response.data.access_token;
-      return accessToken;
-    } else {
-      console.error('Error fetching access token:', response.status, response.statusText);
-      throw new Error('Failed to obtain access token');
+      );
+      
+      if (response.status === 200) {
+        const accessToken = response.data.access_token;
+        return accessToken;
+      } else {
+        console.error('Error fetching access token:', response.status, response.statusText);
+        throw new Error('Failed to obtain access token');
+      }
+    } catch (error) {
+      console.error('Error fetching access token:', error);
+      throw error;
     }
-  } catch (error) {
-    console.error('Error fetching access token:', error);
-    throw error;
   }
-}
+  const handleSearch = () => {
+    setLoading(true);
 
 const DogSearch = () => {
   const [searchCriteria, setSearchCriteria] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
-
-
-  const handleSearch = () => {
-    setLoading(true);
+  
+  
 
 
   useEffect(() => {

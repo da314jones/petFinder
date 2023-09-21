@@ -57,30 +57,6 @@ export default function LocationServices() {
             />{' '}
             Enable High Accuracy (GPS)
           </label>
-
-          <div>
-            <label>
-              Maximum Age (milliseconds):{' '}
-              <input
-                type="number"
-                name="maximumAge"
-                value={locationOptions.maximumAge}
-                onChange={handleOptionsChange}
-              />
-            </label>
-          </div>
-
-          <div>
-            <label>
-              Timeout (milliseconds):{' '}
-              <input
-                type="number"
-                name="timeout"
-                value={locationOptions.timeout}
-                onChange={handleOptionsChange}
-              />
-            </label>
-          </div>
         </div>
       )}
     </div>

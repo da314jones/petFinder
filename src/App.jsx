@@ -1,29 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { getAnimals } from '../api/petfinder_api';
-import LocationServices from './components/LocationServices';
+import React, { useEffect, useState } from "react";
+import { getAnimals } from "../api/petfinder_api";
+import Navbar from "./components/Navbar";
+import PetList from "./components/PetList";
+import PetProfile from "./components/PetProfile";
+import ConfirmationModal from "./components/ConfirmationModal";
+import PetDetails from "./components/PetDetails";
+import Favorites from "./components/Favorites";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"; // Import Link for navigation
+import AdoptionForm from "./components/AdoptionForm";
+import PendingApplications from "./components/PendingApplications";
 
 export default function App() {
   const [animals, setAnimals] = useState([]);
-  const [user, setUser] = useState({
-    name: '',
-    email: '',
-  });
   const [selectedPets, setSelectedPets] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
-  
-
+  const [pendingAdoptionPets, setPendingAdoptionPets] = useState([]);
 
   useEffect(() => {
     async function fetchAnimalsWithToken() {
       try {
         const data = await getAnimals();
         setAnimals(data.animals);
-        setSelectedPets(pets)
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
 
         if (error.response && error.response.status === 401) {
-          await getAnimals(); 
+          await getAnimals();
           fetchAnimalsWithToken();
         }
       }
@@ -34,12 +36,17 @@ export default function App() {
 
   const handleUserInputChange = (event) => {
     const { name, value } = event.target;
-    setUser((prevUser) => ({ ...prevUser, [name]: value }));
+    setUserLocation((prevUserLocation) => ({
+      ...prevUserLocation,
+      [name]: value,
+    }));
   };
 
   const handlePetSelect = (animal) => {
-    const isAnimalSelected = selectedPets.some((selectedPet) => selectedPet.id === animal.id);
-  
+    const isAnimalSelected = selectedPets.some(
+      (selectedPet) => selectedPet.id === animal.id
+    );
+
     if (isAnimalSelected) {
       setSelectedPets((prevSelectedPets) =>
         prevSelectedPets.filter((selectedPet) => selectedPet.id !== animal.id)
@@ -48,8 +55,7 @@ export default function App() {
       setSelectedPets((prevSelectedPets) => [...prevSelectedPets, animal]);
     }
   };
-  
-  
+
   const handleEmailSubmit = () => {
     // Send selected pets and user information to an API for email processing
     // You might need to make a POST request to your server with this data
@@ -57,76 +63,38 @@ export default function App() {
     // and optionally display a confirmation message to the user
   };
 
-useEffect(() => {
-  async function fetchAnimalsWithToken() {
-    try {
-      let params = {};
-
-      if (userLocation) {
-        params = {
-          ...params,
-          location: `${userLocation.latitude},${userLocation.longitude}`,
-        };
-      }
-
-      const data = await getAnimals(params);
-      setAnimals(data.animals);
-      setSelectedPets([]);
-    } catch (error) {
-      console.error('Error:', error);
-
-      if (error.response && error.response.status === 401) {
-        await getAnimals();
-        fetchAnimalsWithToken();
-      }
-    }
-  }
-
-  fetchAnimalsWithToken();
-}, [userLocation]);
+  const handleAddToFavorites = () => {
+    const updatedFavorites =
+      JSON.parse(localStorage.getItem("favorites")) || [];
+    const combinedFavorites = [...updatedFavorites, ...selectedPets];
+    localStorage.setItem("favorites", JSON.stringify(combinedFavorites));
+    setSelectedPets([]);
+  };
 
   return (
-    <div>
-      <h1> User Input Form </h1>
-      <form>
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={user.name}
-          onChange={handleUserInputChange}
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={user.email}
-          onChange={handleUserInputChange}
-        />
-        {/* Add more input fields for user information */}
-      </form>
-
-      {/* Pet List */}
-      <ul>
-        {/* Map through the list of pets and display them */}
-        {animals.map((animal) => (
-          <li key={animal.id}>
-            {animal.name}
-            <button onClick={() => handlePetSelect(animal)}>Select</button>
-          </li>
-        ))}
-      </ul>
-
-      {/* Selected Pets */}
-      <div>
-        <h2>Selected Pets:</h2>
-        <ul>
-          {selectedPets.map((pet) => (
-            <li key={pet.id}>{pet.name}</li>
-          ))}
-        </ul>
-        <button onClick={handleEmailSubmit}>Email Selected Pets</button>
+    <Router>
+      <div className="App">
+        <Navbar />
+        <Link to="/favorites">Go to Favorites</Link>
+        <Link to="/pending-applications">View Pending Applications</Link>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <PetList
+                pets={animals}
+                onPetSelect={handlePetSelect}
+                pendingAdoptionPets={pendingAdoptionPets}
+              />
+            }
+          />
+          <Route path="/dog/:id" element={<PetProfile />} />
+          <Route path="/dog/id/detail" element={<PetDetails />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/pending-applications" element={<PendingApplications pendingApplications={pendingAdoptionPets} />} />
+        </Routes>
+        <ConfirmationModal />
       </div>
-    </div>
+    </Router>
   );
 }

@@ -3,13 +3,12 @@ import React, { useState, useEffect } from 'react';
 export default function LocationServices() {
   const [isLocationEnabled, setLocationEnabled] = useState(false);
   const [locationOptions, setLocationOptions] = useState({
-    enableHighAccuracy: false, // Whether to use high-accuracy location (GPS)
-    maximumAge: 0, // Maximum age of a cached location in milliseconds
-    timeout: Infinity, // Maximum time (in milliseconds) to wait for location data
+    enableHighAccuracy: false, 
+    maximumAge: 0, 
+    timeout: Infinity, 
   });
 
   useEffect(() => {
-    // Check if Geolocation API is available in the browser
     if ('geolocation' in navigator) {
       setLocationEnabled(true);
     } else {

@@ -6,15 +6,17 @@ import PetProfile from "./components/PetProfile";
 import ConfirmationModal from "./components/ConfirmationModal";
 import PetDetails from "./components/PetDetails";
 import Favorites from "./components/Favorites";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"; // Import Link for navigation
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import AdoptionForm from "./components/AdoptionForm";
 import PendingApplications from "./components/PendingApplications";
+import Donations from "./components/Donations";
 
 export default function App() {
   const [animals, setAnimals] = useState([]);
   const [selectedPets, setSelectedPets] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [pendingAdoptionPets, setPendingAdoptionPets] = useState([]);
+  const [currentDonations, setCurrentDonations] = useState([]);
 
   useEffect(() => {
     async function fetchAnimalsWithToken() {
@@ -92,6 +94,7 @@ export default function App() {
           <Route path="/dog/id/detail" element={<PetDetails />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/pending-applications" element={<PendingApplications pendingApplications={pendingAdoptionPets} />} />
+          <Route path="/donations" element={<Donations currentDonations={currentDonations} />} />
         </Routes>
         <ConfirmationModal />
       </div>

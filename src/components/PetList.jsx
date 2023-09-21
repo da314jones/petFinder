@@ -6,18 +6,31 @@ export default function PetList({ pets, pendingAdoptionPets }) {
   const [selectedProfiles, setSelectedProfiles] = useState([]);
   const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem('favorites')) || []);
   const [isAdoptionFormOpen, setIsAdoptionFormOpen] = useState(false);
+  const [isDonationsFormOpen, setIsDonationsFormOpen] = useState(false);
 
   useEffect(() => {
     const storedFormState = localStorage.getItem('pendingAdoption');
     setIsAdoptionFormOpen(storedFormState === 'true');
   }, []);
+ 
+  useEffect(() => {
+    const storedFormState = localStorage.getItem('currentDonation');
+    setIsDonationsFormOpen(storedFormState === 'true');
+  }, []);
 
   const openAdoptionForm = () => {
     setIsAdoptionFormOpen(true);
   };
+  const openDonationsForm = () => {
+    setIsDonationsFormOpen(true);
+  };
 
   const closeAdoptionForm = () => {
     setIsAdoptionFormOpen(false);
+  };
+ 
+  const closeDonationsForm = () => {
+    setIsDonationsFormOpen(false);
   };
 
   const handleProfileClick = (profile) => {
@@ -66,6 +79,15 @@ export default function PetList({ pets, pendingAdoptionPets }) {
         }}
         onClose={closeAdoptionForm}
         pendingAdoptionPets={pendingAdoptionPets} />
+      )}
+      <button onClick={openDonationsForm}>Open Donation Form</button>
+      {isDonationsFormOpen && (
+        <Donations 
+        onSubmit={(formData) =>{
+          console.log(formData);
+          closeDonationsForm();        }}
+        onClose={closeDonationsForm}
+        currentDonations={currentDonations} />
       )}
     </div>
   );

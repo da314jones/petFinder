@@ -1,129 +1,99 @@
-import React, { useState, useEffect } from "react";
-import "./DogSearch.css";
+import React, { useState, useEffect } from 'react';
+import './DogSearch.css';
+import axios from 'axios';
 
-export default function DogSearch() {
-  const [breed, setBreed] = useState("");
-  const [size, setSize] = useState("");
-  const [age, setAge] = useState("");
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-  const [animals, setAnimals] = useState([]);
+async function fetchAccessToken(apiKey, apiSecret) {
+  try {
+    const response = await axios.post(
+      'https://api.petfinder.com/v2/oauth2/token',
+      `grant_type=client_credentials&client_id=${apiKey}&client_secret=${apiSecret}`,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      const accessToken = response.data.access_token;
+      return accessToken;
+    } else {
+      console.error('Error fetching access token:', response.status, response.statusText);
+      throw new Error('Failed to obtain access token');
+    }
+  } catch (error) {
+    console.error('Error fetching access token:', error);
+    throw error;
+  }
+}
+
+const DogSearch = () => {
+  const [searchCriteria, setSearchCriteria] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getUserLocation();
+    async function fetchDogs() {
+      setLoading(true);
+
+      const apiKey = process.env.VITE_API_KEY;
+      const apiSecret = process.env.VITE_API_SECRET;
+
+      try {
+        const accessToken = await fetchAccessToken(apiKey, apiSecret);
+
+        const response = await fetch('https://api.petfinder.com/v2/animals?type=dog&page=4', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setSearchResults(data.animals);
+        } else {
+          console.error('Error fetching dog data:', response.status, response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching dog data:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchDogs();
   }, []);
 
-  const getUserLocation = () => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLatitude(position.coords.latitude);
-          setLongitude(position.coords.longitude);
-        },
-        (error) => {
-          console.error("Error getting geolocation:", error);
-        }
-      );
-    }
-  };
-
-  const handleSearch = () => {
-    setLoading(true);
-    getAccessToken()
-      .then((accessToken) => getAnimals(accessToken))
-      .then((response) => setAnimals(response))
-      .catch((error) => {
-        console.error("Error fetching animals:", error);
-        setAnimals([]);
-      })
-      .finally(() => setLoading(false));
-  };
-
-  const getAccessToken = async () => {
-    const apiKey = getApiKey();
-    const apiSecret = getApiSecret();
-
-    const tokenUrl = getTokenUrl();
-    const requestBody = `grant_type=client_credentials&client_id=${apiKey}&client_secret=${apiSecret}`;
-
-    const response = await fetch(tokenUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: requestBody,
-    });
-    const data = await response.json();
-    return data.access_token;
-  };
-
-  const getAnimals = async (accessToken) => {
-    const apiUrlValue = getApiUrl();
-    let apiUrlWithParameters = `${apiUrlValue}?type=dog&page=1&limit=20&breed=${breed}&size=${size}&age=${age}`;
-
-    if (latitude !== null && longitude !== null) {
-      apiUrlWithParameters += `&location=${latitude},${longitude}`;
-    }
-
-    const response = await fetch(apiUrlWithParameters, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    const data = await response.json();
-    return data.animals;
+  const handleSubmit = (e) => {
+    e.preventDefault();
   };
 
   return (
-    <div className="search">
-      <h2>Find Your Perfect Dog</h2>
-      <label>
-        Breed:
+    <div>
+      <h1>Dog Search</h1>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
-          value={breed}
-          onChange={(e) => setBreed(e.target.value)}
+          placeholder="Enter search criteria (e.g., breed, location)"
+          value={searchCriteria}
+          onChange={e => setSearchCriteria(e.target.value)}
         />
-      </label>
-      <label>
-        Size:
-        <input
-          type="text"
-          value={size}
-          onChange={(e) => setSize(e.target.value)}
-        />
-      </label>
-      <label>
-        Age:
-        <input
-          type="text"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-        />
-      </label>
+        <button type="submit">Search</button>
+      </form>
 
-      <button onClick={handleSearch} disabled={loading}>
-        {loading ? "Searching..." : "Search"}
-      </button>
+      {loading && <p>Loading...</p>}
 
-      {animals.length > 0 && (
+      {searchResults.length > 0 && (
+   
         <div>
-          <h3>Fetched Animals:</h3>
+          <h2>Search Results</h2>
           <ul>
-            {animals.map((animal) => (
-              <li key={animal.id}>
-                <strong>Name:</strong> {animal.name}
-                <br />
-                <strong>Species:</strong> {animal.species}
-                <br />
-                <strong>Breed:</strong> {animal.breeds.primary}
-                <br />
-                <strong>Age:</strong> {animal.age}
-                <br />
-                <strong>Gender:</strong> {animal.gender}
-                <br />
+            {searchResults.map(dog => (
+              <li key={dog.id}>
+                <h3>{dog.name}</h3>
+                <p>Breed: {dog.breeds.primary}</p>
+                {/* Display images and other dog details here */}
+
               </li>
             ))}
           </ul>
@@ -131,4 +101,6 @@ export default function DogSearch() {
       )}
     </div>
   );
-}
+};
+
+export default DogSearch;

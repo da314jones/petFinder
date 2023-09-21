@@ -43,4 +43,23 @@ async function getAnimals() {
   }
 }
 
-export { getAnimals };
+async function getPetById(id) {
+  try {
+    if (!accessToken) {
+      await fetchAccessToken();
+    }
+
+    const response = await axios.get(`https://api.petfinder.com/v2/animals/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching animals:', error);
+    throw error;
+  }
+}
+
+export { getAnimals, getPetById };

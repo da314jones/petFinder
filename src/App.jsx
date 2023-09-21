@@ -1,27 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { getAnimals } from "../api/petfinder_api";
 import Navbar from "./components/Navbar";
-import PetList from "./components/PetList";
+import PetsList from "./components/PetsList";
 import PetProfile from "./components/PetProfile";
 import ConfirmationModal from "./components/ConfirmationModal";
 import PetDetails from "./components/PetDetails";
 import Favorites from "./components/Favorites";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import AdoptionForm from "./components/AdoptionForm";
-import PendingApplications from "./components/PendingApplications";
 import Object from "./components/Object";
 
 export default function App() {
   const [animals, setAnimals] = useState([]);
   const [selectedPets, setSelectedPets] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
-  const [pendingAdoptionPets, setPendingAdoptionPets] = useState([]);
-  const [applications, setApplications] = useState([]);
 
-  const updateApplications = (newApplications) => {
-    setApplications(newApplications);
-  };
-
+  
   useEffect(() => {
     async function fetchAnimalsWithToken() {
       try {
@@ -82,37 +75,21 @@ export default function App() {
       <div className="App">
         <Navbar />
         <Link to="/favorites">Go to Favorites</Link>
-        <Link to="/pending-applications">View Pending Applications</Link>
         <Routes>
           <Route
             path="/"
             element={
-              <PetList
+              <PetsList
                 pets={animals}
                 onPetSelect={handlePetSelect}
-                pendingAdoptionPets={pendingAdoptionPets}
-                applications={applications}
-                updateApplications={updateApplications}
-              />
+                />
             }
           />
           <Route path="/object" element={<Object animals={animals} />} />
           <Route path="/dog/:id" element={<PetProfile />} />
           <Route path="/dog/id/detail" element={<PetDetails />} />
           <Route path="/favorites" element={<Favorites />} />
-          <Route
-            path="/pending-applications"
-            element={<PendingApplications pendingApplications={applications} updateApplications={updateApplications} />}
-          />
-          <Route
-            path="/pending-applications"
-            element={
-              <AdoptionForm
-                onSubmit={updateApplications}
-                applications={applications}
-              />
-            }
-          />
+          
         </Routes>
         <ConfirmationModal />
       </div>

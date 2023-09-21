@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 export default function Favorites() {
   const [favorites, setFavorites] = useState([]);
-  const [pendingAdoptionPets, setPendingAdoptionPets] = useState([])
 
   function getFavoritesFromLocalStorage() {
     try {
@@ -24,13 +23,7 @@ export default function Favorites() {
     localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
   }
 
-  function moveToPendingAdoption(petId) {
-    const selectedPet = favorites.find((pet) => pet.id === petId);
-    if (selectedPet) {
-        removeFavorite(petId);
-        setPendingAdoptionPets((prevPendingAdoptionPets) => [...prevPendingAdoptionPets, selectedPet]);
-    }
-  }
+  
 
   return (
     <div>
@@ -41,7 +34,8 @@ export default function Favorites() {
         <ul>
           {favorites.map((pet) => (
             <li key={pet.id}>
-              {pet.name}
+              {pet.name}{" "}
+              {pet.id}{" "}
               <button onClick={() => removeFavorite(pet.id)}>Remove</button>
             </li>
           ))}

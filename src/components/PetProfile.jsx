@@ -19,6 +19,19 @@ export default function PetProfile({ pet, isSelected, onPetSelect }) {
       <p>Size: {pet.size}</p>
       <p>Age: {pet.age}</p>
       <p>Description: {pet.description}</p>
+      <p>
+  <strong></strong>
+  <a
+    href={pet.url}
+    onClick={(e) => {
+      if (!window.confirm("You are now leaving the current website. Click OK to continue or Cancel to stay.")) {
+        e.preventDefault();
+      }
+    }}
+  >
+     Sponsor this pet
+  </a>
+</p>
       <p>Attributes: {pet.attributes ? JSON.stringify(pet.attributes) : 'N/A'}</p>
       <p>Environment: {pet.environment ? JSON.stringify(pet.environment) : 'N/A'}</p>
       <button onClick={handleSelectClick}>

@@ -47,17 +47,6 @@ export default function Favorites() {
           ))}
         </ul>
       )}
-      <h2>Pending Adoption</h2>
-      {pendingAdoptionPets.length === 0 ? (
-        <p>No pets pending adoption yet.</p>
-      ) : (
-        <ul>
-            {pendingAdoptionPets.map((pet) => (
-                <li key={pet.id}>{pet.name}</li>
-            ))}
-        </ul>
-      )
-      }
-    </div>
+      </div>
   );
 }

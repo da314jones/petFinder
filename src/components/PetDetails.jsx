@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function DogDetails({ details }) {
+export default function PetDetails({ details }) {
   if (!details || !details.photos || !Array.isArray(details.photos)) {
     return null;
   }

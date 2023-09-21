@@ -1,19 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 export default function AdoptionForm({ onSubmit, onClose }) {
-  const initialFormData = {
-    fullName: '',
-    email: '',
-    phoneNumber: '',
-    address: '',
-    additionalInfo: '',
-  };
+  const [adoption, setAdoption] = useState([]);
 
+  const initialFormData = {
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    address: "",
+    additionalInfo: "",
+  };
   const [formData, setFormData] = useState(initialFormData);
   const [applications, setApplications] = useState([]);
+  console.log("Applications:", applications);
+
+  function getAdoptionsFromLocalStorage() {
+    try {
+      const adoptionFromStorage =
+        JSON.parse(localStorage.getItem("Adoption")) || [];
+      setAdoption(adoptionFromStorage);
+    } catch (error) {
+      console.error("Error retrieving Adoption from local storage:", error);
+    }
+  }
 
   useEffect(() => {
-    const savedApplications = JSON.parse(localStorage.getItem('adoptionApplications')) || [];
+    getAdoptionsFromLocalStorage();
+  }, []);
+
+  useEffect(() => {
+    const savedApplications =
+      JSON.parse(localStorage.getItem("adoptionApplications")) || [];
     setApplications(savedApplications);
   }, []);
 
@@ -30,14 +47,23 @@ export default function AdoptionForm({ onSubmit, onClose }) {
     const newApplication = { ...formData, id: Date.now() };
     const updatedApplications = [...applications, newApplication];
     setApplications(updatedApplications);
-    localStorage.setItem('adoptionApplications', JSON.stringify(updatedApplications));
-    onSubmit(newApplication);
+    localStorage.setItem(
+      "adoptionApplications",
+      JSON.stringify(updatedApplications)
+    );
+    onSubmit(updatedApplications);
     setFormData(initialFormData);
   };
 
-  const handleCancel = () => {
-    setFormData(initialFormData);
-    onClose();
+  const handleCancel = (applicationId) => {
+    const updatedApplications = applications.filter(
+      (app) => app.id !== applicationId
+    );
+    setApplications(updatedApplications);
+    localStorage.setItem(
+      "adoptionApplications",
+      JSON.stringify(updatedApplications)
+    );
   };
 
   return (
@@ -95,14 +121,17 @@ export default function AdoptionForm({ onSubmit, onClose }) {
         </div>
 
         <button type="submit">Submit</button>
-        <button type="button" onClick={handleCancel}>Cancel</button>
       </form>
-
       <div>
         <h3>Saved Adoption Applications</h3>
         <ul>
           {applications.map((app) => (
-            <li key={app.id}>{app.fullName}</li>
+            <li key={app.id}>
+              {app.fullName}
+              <button type="button" onClick={() => handleCancel(app)}>
+                Cancel
+              </button>
+            </li>
           ))}
         </ul>
       </div>

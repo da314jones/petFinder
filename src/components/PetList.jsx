@@ -2,36 +2,28 @@ import React, { useState, useEffect } from 'react';
 import PetProfile from './PetProfile';
 import AdoptionForm from './AdoptionForm';
 
-export default function PetList({ pets, pendingAdoptionPets }) {
+export default function PetList({ pets, pendingAdoptionPets, currentDonations }) {
   const [selectedProfiles, setSelectedProfiles] = useState([]);
   const [favorites, setFavorites] = useState(JSON.parse(localStorage.getItem('favorites')) || []);
   const [isAdoptionFormOpen, setIsAdoptionFormOpen] = useState(false);
-  const [isDonationsFormOpen, setIsDonationsFormOpen] = useState(false);
 
   useEffect(() => {
     const storedFormState = localStorage.getItem('pendingAdoption');
     setIsAdoptionFormOpen(storedFormState === 'true');
   }, []);
  
-  useEffect(() => {
-    const storedFormState = localStorage.getItem('currentDonation');
-    setIsDonationsFormOpen(storedFormState === 'true');
-  }, []);
-
+  
   const openAdoptionForm = () => {
     setIsAdoptionFormOpen(true);
   };
-  const openDonationsForm = () => {
-    setIsDonationsFormOpen(true);
-  };
+
+  
 
   const closeAdoptionForm = () => {
     setIsAdoptionFormOpen(false);
   };
  
-  const closeDonationsForm = () => {
-    setIsDonationsFormOpen(false);
-  };
+  
 
   const handleProfileClick = (profile) => {
     const isProfileSelected = selectedProfiles.some(
@@ -53,11 +45,7 @@ export default function PetList({ pets, pendingAdoptionPets }) {
     setSelectedProfiles([]);
   };
 
-  useEffect(() => {
-    localStorage.setItem('pendingAdoption', isAdoptionFormOpen.toString());
-  }, [isAdoptionFormOpen]);
-
-  return (
+   return (
     <div className="pet-list">
       <button onClick={saveFavorites}>Save Selected as Favorites</button>
       {pets.map((pet) => (
@@ -80,15 +68,8 @@ export default function PetList({ pets, pendingAdoptionPets }) {
         onClose={closeAdoptionForm}
         pendingAdoptionPets={pendingAdoptionPets} />
       )}
-      <button onClick={openDonationsForm}>Open Donation Form</button>
-      {isDonationsFormOpen && (
-        <Donations 
-        onSubmit={(formData) =>{
-          console.log(formData);
-          closeDonationsForm();        }}
-        onClose={closeDonationsForm}
-        currentDonations={currentDonations} />
-      )}
+       
+     
     </div>
   );
 }

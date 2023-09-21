@@ -9,14 +9,18 @@ import Favorites from "./components/Favorites";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import AdoptionForm from "./components/AdoptionForm";
 import PendingApplications from "./components/PendingApplications";
-import Donations from "./components/Donations";
+import Object from "./components/Object";
 
 export default function App() {
   const [animals, setAnimals] = useState([]);
   const [selectedPets, setSelectedPets] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [pendingAdoptionPets, setPendingAdoptionPets] = useState([]);
-  const [currentDonations, setCurrentDonations] = useState([]);
+  const [applications, setApplications] = useState([]);
+
+  const updateApplications = (newApplications) => {
+    setApplications(newApplications);
+  };
 
   useEffect(() => {
     async function fetchAnimalsWithToken() {
@@ -87,17 +91,44 @@ export default function App() {
                 pets={animals}
                 onPetSelect={handlePetSelect}
                 pendingAdoptionPets={pendingAdoptionPets}
+                applications={applications}
+                updateApplications={updateApplications}
               />
             }
           />
+          <Route path="/object" element={<Object animals={animals} />} />
           <Route path="/dog/:id" element={<PetProfile />} />
           <Route path="/dog/id/detail" element={<PetDetails />} />
           <Route path="/favorites" element={<Favorites />} />
-          <Route path="/pending-applications" element={<PendingApplications pendingApplications={pendingAdoptionPets} />} />
-          <Route path="/donations" element={<Donations currentDonations={currentDonations} />} />
+          <Route
+            path="/pending-applications"
+            element={<PendingApplications pendingApplications={applications} updateApplications={updateApplications} />}
+          />
+          <Route
+            path="/pending-applications"
+            element={
+              <AdoptionForm
+                onSubmit={updateApplications}
+                applications={applications}
+              />
+            }
+          />
         </Routes>
         <ConfirmationModal />
       </div>
     </Router>
   );
+}
+
+{
+  /* <h3>Donations Form</h3>
+        <button onClick={openDonationsForm}>Open Donation Form</button>
+      {isDonationsFormOpen && (
+        <Donations 
+        onSubmit={(formData) =>{
+          console.log(formData);
+          closeDonationsForm();        }}
+        onClose={closeDonationsForm}
+        currentDonations={currentDonations} />
+      )} */
 }

@@ -36,8 +36,8 @@ const DogSearch = () => {
     async function fetchDogs() {
       setLoading(true);
 
-      const apiKey = process.env.VITE_API_KEY;
-      const apiSecret = process.env.VITE_API_SECRET;
+      const apiKey = import.env.VITE_API_KEY;
+      const apiSecret = import.env.VITE_API_SECRET;
 
       try {
         const accessToken = await fetchAccessToken(apiKey, apiSecret);

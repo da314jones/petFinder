@@ -5,7 +5,7 @@ function PetList() {
   const [pets, setPets] = useState([]);
 
   useEffect(() => {
-    // Fetch pet data from the API
+    
     getPetById()
       .then((data) => {
         setPets(data.animals);
